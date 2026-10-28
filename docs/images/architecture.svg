@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 560" width="1000" height="560" role="img" aria-labelledby="title desc" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif">
+  <title id="title">PizzaHub architecture</title>
+  <desc id="desc">A React single-page app served by Firebase Hosting talks to Firebase Authentication, Cloud Firestore, Cloud Storage and two Cloud Functions through a service layer. Firestore and Storage are protected by security rules. The Cloud Functions create Stripe Checkout sessions, receive Stripe webhook events and write subscription status to Firestore.</desc>
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#57606a"/>
+    </marker>
+    <style>
+      .title { font-size: 15px; font-weight: 600; fill: #1f2328; }
+      .label { font-size: 13px; font-weight: 600; fill: #1f2328; }
+      .text { font-size: 12px; fill: #57606a; }
+      .small { font-size: 11px; fill: #57606a; }
+      .accent { font-size: 11px; font-weight: 600; fill: #c2381f; letter-spacing: 0.4px; }
+      .box { fill: #f6f8fa; stroke: #d0d7de; stroke-width: 1; }
+      .group { fill: #ffffff; stroke: #afb8c1; stroke-width: 1.2; }
+      .service { fill: #fdf1ee; stroke: #c2381f; stroke-width: 1.4; }
+      .rules { fill: none; stroke: #c2381f; stroke-width: 1.2; stroke-dasharray: 5 4; }
+      .flow { stroke: #57606a; stroke-width: 1.4; fill: none; }
+    </style>
+  </defs>
+
+  <!-- Solid background so the diagram stays readable in GitHub dark mode -->
+  <rect x="0" y="0" width="1000" height="560" rx="12" fill="#ffffff"/>
+
+  <!-- Browser -->
+  <rect class="group" x="20" y="40" width="260" height="460" rx="10"/>
+  <text class="accent" x="40" y="66">BROWSER</text>
+  <text class="title" x="40" y="88">React single-page app</text>
+  <text class="small" x="40" y="106">Served by Firebase Hosting</text>
+
+  <rect class="box" x="40" y="126" width="220" height="74" rx="8"/>
+  <text class="label" x="56" y="152">Pages and components</text>
+  <text class="text" x="56" y="172">Tableau, Menu, Dashboard,</text>
+  <text class="text" x="56" y="188">ticket sidebar, route guards</text>
+
+  <rect class="box" x="40" y="228" width="220" height="74" rx="8"/>
+  <text class="label" x="56" y="254">React contexts</text>
+  <text class="text" x="56" y="274">Auth state and active Store</text>
+
+  <rect class="service" x="40" y="330" width="220" height="150" rx="8"/>
+  <text class="label" x="56" y="356">Service layer</text>
+  <text class="text" x="56" y="378">One service per entity</text>
+  <text class="text" x="56" y="398">Validates data before writing</text>
+  <text class="text" x="56" y="418">The only code that calls</text>
+  <text class="text" x="56" y="434">Firebase</text>
+
+  <line class="flow" x1="150" y1="200" x2="150" y2="226" marker-end="url(#arrow)"/>
+  <line class="flow" x1="150" y1="302" x2="150" y2="328" marker-end="url(#arrow)"/>
+
+  <!-- Firebase project -->
+  <rect class="group" x="340" y="40" width="404" height="460" rx="10"/>
+  <text class="accent" x="360" y="66">FIREBASE PROJECT</text>
+  <text class="small" x="724" y="66" text-anchor="end">region europe-west6</text>
+
+  <rect class="box" x="360" y="84" width="364" height="58" rx="8"/>
+  <text class="label" x="376" y="108">Authentication</text>
+  <text class="text" x="376" y="128">Email and password, Google sign-in</text>
+
+  <rect class="rules" x="360" y="160" width="364" height="170" rx="8"/>
+  <text class="accent" x="376" y="182">SECURITY RULES</text>
+  <text class="small" x="490" y="182">tenant isolation and data validation</text>
+
+  <rect class="box" x="376" y="196" width="160" height="118" rx="8"/>
+  <text class="label" x="392" y="222">Cloud Storage</text>
+  <text class="text" x="392" y="244">Product images,</text>
+  <text class="text" x="392" y="260">compressed in the</text>
+  <text class="text" x="392" y="276">browser</text>
+
+  <rect class="box" x="548" y="196" width="160" height="118" rx="8"/>
+  <text class="label" x="564" y="222">Cloud Firestore</text>
+  <text class="text" x="564" y="244">Menu, customers,</text>
+  <text class="text" x="564" y="260">orders, subscriptions</text>
+  <text class="text" x="564" y="280">Real-time listeners</text>
+
+  <rect class="box" x="360" y="356" width="364" height="128" rx="8"/>
+  <text class="label" x="376" y="380">Cloud Functions</text>
+  <text class="small" x="490" y="380">Node.js 22, Stripe test mode</text>
+  <rect fill="#ffffff" stroke="#d0d7de" x="376" y="392" width="332" height="38" rx="6"/>
+  <text class="label" x="390" y="416">createCheckoutSession</text>
+  <text class="small" x="694" y="416" text-anchor="end">callable</text>
+  <rect fill="#ffffff" stroke="#d0d7de" x="376" y="438" width="332" height="38" rx="6"/>
+  <text class="label" x="390" y="462">stripeWebhook</text>
+  <text class="small" x="694" y="462" text-anchor="end">HTTP endpoint</text>
+
+  <!-- Functions write subscription status with the Admin SDK -->
+  <line class="flow" x1="660" y1="392" x2="660" y2="316" marker-end="url(#arrow)"/>
+  <text class="small" x="652" y="349" text-anchor="end">subscription status (Admin SDK)</text>
+
+  <!-- Service layer to Firebase -->
+  <path class="flow" d="M260 405 H306"/>
+  <path class="flow" d="M306 113 V411"/>
+  <path class="flow" d="M306 113 H358" marker-end="url(#arrow)"/>
+  <path class="flow" d="M306 245 H358" marker-end="url(#arrow)"/>
+  <path class="flow" d="M306 411 H374" marker-end="url(#arrow)"/>
+
+  <!-- Stripe -->
+  <rect class="group" x="804" y="360" width="176" height="124" rx="10"/>
+  <text class="accent" x="822" y="386">STRIPE</text>
+  <text class="label" x="822" y="408">Test mode only</text>
+  <text class="text" x="822" y="430">Checkout</text>
+  <text class="text" x="822" y="448">Subscriptions</text>
+  <text class="text" x="822" y="466">Signed webhooks</text>
+
+  <path class="flow" d="M708 411 H802" marker-end="url(#arrow)"/>
+  <text class="small" x="756" y="404" text-anchor="middle">session</text>
+  <path class="flow" d="M802 457 H710" marker-end="url(#arrow)"/>
+  <text class="small" x="756" y="474" text-anchor="middle">events</text>
+
+  <text class="small" x="20" y="532">Arrows show the main data flows. Firestore and Storage access from the browser always goes through the security rules.</text>
+</svg>

@@ -108,14 +108,20 @@ These are design decisions implemented in the code. They have not undergone an e
 
 Tests use Vitest and Testing Library; the Firestore, Storage and end-to-end tests run against the Firebase Emulator Suite.
 
-- **Client suite** (52 test files):
-  - Unit tests for services and utilities.
-  - Component and page tests.
-  - Firestore and Storage security-rules tests.
-  - An end-to-end test on the emulators covering registration, onboarding, menu setup, takeaway and delivery orders, status changes and the order history.
-- **Cloud Functions suite** (3 test files): Checkout and webhook handlers, run against in-memory fakes of Firestore and Stripe.
+**842 automated tests, all passing** at v1.0.2 (last run on 28 October 2026):
+
+| Suite | Files | Tests |
+|---|---|---|
+| Client: services, utilities, components and pages | 52 | 809 |
+| ↳ of which Firestore and Storage security rules | 2 | 124 |
+| ↳ of which end-to-end flow | 1 | 10 |
+| Cloud Functions: Checkout and webhook handlers | 3 | 33 |
+
+- **Security-rules tests** (113 for Firestore, 11 for Storage) run against the emulators and check tenant isolation, field validation and the allowed order transitions.
+- **The end-to-end test** covers registration, onboarding, menu setup, takeaway and delivery orders, status changes and the order history.
+- **The Cloud Functions tests** run against in-memory fakes of Firestore and Stripe, with no network access.
 - **Continuous integration:** every pull request to `develop` or `main` triggers workflow linting, Oxlint, the client suite on the emulators and a production build. The Cloud Functions suite runs locally, not in CI.
-- **Last observed run (v1.0.2, October 2026):** the Cloud Functions suite passed all 33 tests. The client suite was not re-run for this showcase, and test coverage is not measured.
+- Test coverage is not measured.
 
 ## Development process
 

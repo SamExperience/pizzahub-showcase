@@ -10,9 +10,9 @@ PizzaHub is a web application for pizzeria staff. They set up their pizzeria, ma
 ![Firebase](https://img.shields.io/badge/Firebase-FFCA28?logo=firebase&logoColor=000)
 ![Stripe test mode](https://img.shields.io/badge/Stripe-test%20mode-635BFF?logo=stripe&logoColor=fff)
 
-**[Live demo](https://pizzahub-11284.web.app)**
+**[Live demo](https://pizzahub-11284.web.app)** · browser-only version with simulated data, no account needed ([details](#full-application-and-public-demo))
 
-> This repository is a project showcase. It contains documentation and screenshots only; the application source code is not included.
+> This repository is a project showcase. It contains documentation and screenshots only; the source code of the application and of the demo is kept in private repositories and is available on request.
 
 ![The Tableau: today's tickets in the Pending, In progress and Completed columns](docs/images/tableau.jpg)
 
@@ -27,9 +27,34 @@ PizzaHub replaces the slips with structured tickets and a shared board:
 - The **Tableau** shows the day's tickets in three columns. When a ticket moves from *Pending* to *In progress* to *Completed*, the change appears immediately on every open screen.
 - The **Dashboard** keeps a day-by-day order history.
 
+## Full application and public demo
+
+PizzaHub exists in two versions. This README describes the **full application**; the **public demo** is what the live link opens.
+
+| | Full application (v1.0.2) | Public demo |
+|---|---|---|
+| Purpose | The complete MVP | Let anyone try the interface |
+| Backend | Firebase: Authentication, Firestore, Storage, Cloud Functions | No application backend: static files on Firebase Hosting, data handled by an in-memory adapter in the browser |
+| Access | Account with email and password or Google | One click on **Enter demo**, no account |
+| Data | Stored in Cloud Firestore | Fictional seed data; saved only in the visitor's browser, and only if they choose to |
+| Payments | Stripe Checkout in test mode | Not included |
+| Availability | Private, not publicly deployed | [pizzahub-11284.web.app](https://pizzahub-11284.web.app) |
+
+**Why the public demo has no backend.** The demo is designed with data protection in mind: anyone can try it without an account, and the data they enter stays in their browser. It also keeps the real Firebase project and its quotas out of public reach.
+
+- It reuses the application's pages, components and business rules for the menu, tickets, Tableau and order history. Only the data layer is replaced: the UI talks to ports (interfaces), and a local adapter implements them in memory, with real-time updates on the Tableau.
+- A build check fails if the bundle contains a backend SDK, Google or Stripe endpoints or API keys, and a lint rule forbids Firebase imports in the demo source.
+- Every page shows a demo notice and a reset action. Nothing is written to the browser unless the visitor chooses to save the demo; saved data expires after 7 days without changes.
+- The demo has its own privacy and terms pages.
+- The demo's own suite of 496 tests (43 files) passes, and 16 Playwright checks pass against the published site. Among other things, they confirm that the demo stays on its own origin, never contacts Google or Stripe, and stores nothing when the visitor does not save (last run on 13 November 2026).
+
+The Firebase and Stripe integration described below is fully implemented and tested in the full application; it is simply not exposed publicly.
+
+![The public demo: the Tableau with the demo notice, simulated tickets and the reset action](docs/images/demo-tableau.jpg)
+
 ## Screenshots
 
-All screenshots show fictional demo data.
+These screenshots are taken from the full application and show fictional data. The sign-in page exists only in the full application.
 
 | Creating a delivery ticket | Menu management |
 |---|---|
@@ -130,15 +155,15 @@ Tests use Vitest and Testing Library; the Firestore, Storage and end-to-end test
 - Releases are tagged with semantic versions, from v0.1.0 to the current v1.0.2.
 - Functions, components and helpers are documented with JSDoc.
 
-## Demo and project status
+## Project status
 
-PizzaHub is an MVP (**v1.0.2**) available as a live demo at [pizzahub-11284.web.app](https://pizzahub-11284.web.app).
-
-- Using the demo requires creating an account; no shared demo credentials are provided.
-- Payments run in Stripe test mode only, so no real charge can be made.
+- The full application is an MVP at **v1.0.2**. It is not publicly deployed.
+- The public demo at [pizzahub-11284.web.app](https://pizzahub-11284.web.app) needs no account and uses only simulated data (see [Full application and public demo](#full-application-and-public-demo)).
+- In the full application, payments run in Stripe test mode only, so no real charge can be made.
 - The interface is in English and shows prices in euros.
+- The source code of both versions is private and available on request.
 
-The app has been trialed in a pizzeria and with non-technical users to gather usability feedback. It is not in commercial use.
+The full application has been trialed in a pizzeria and with non-technical users to gather usability feedback. It is not in commercial use.
 
 ## Possible next steps
 
